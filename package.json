@@ -1,0 +1,22 @@
+{
+  "name": "mealcare-slackbot",
+  "version": "1.0.0",
+  "description": "mealcare today menu request bot",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Protomothis/mealcare-slackbot.git"
+  },
+  "keywords": [
+    "slackbot"
+  ],
+  "author": "protomothis",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Protomothis/mealcare-slackbot/issues"
+  },
+  "homepage": "https://github.com/Protomothis/mealcare-slackbot#readme"
+}
