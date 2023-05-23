@@ -2,9 +2,9 @@
   "name": "mealcare-slackbot",
   "version": "1.0.0",
   "description": "mealcare today menu request bot",
-  "main": "app.js",
+  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "serve": "nodemon app.js"
   },
   "repository": {
     "type": "git",
@@ -18,5 +18,13 @@
   "bugs": {
     "url": "https://github.com/Protomothis/mealcare-slackbot/issues"
   },
-  "homepage": "https://github.com/Protomothis/mealcare-slackbot#readme"
+  "homepage": "https://github.com/Protomothis/mealcare-slackbot#readme",
+  "dependencies": {
+    "@slack/bolt": "^3.13.1",
+    "node-fetch": "2"
+  },
+  "devDependencies": {
+    "dotenv": "^16.0.3",
+    "nodemon": "^2.0.22"
+  }
 }
