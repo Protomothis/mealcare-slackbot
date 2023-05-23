@@ -14,8 +14,8 @@ app.command("/menu", async ({ command, ack, say }) => {
     const { storeName, cornerName, mainMenu, subMenus } = await getTodayMenu();
     say(`오늘의 ${storeName}의 ${cornerName} 메뉴는 ${mainMenu}와 ${subMenus.join(', ')}!`);
   } catch (error) {
-    console.log("err")
     console.error(error);
+    say(`다음과 같은 오류가 발생하였습니다. ${error}`);
   }
 });
 // region services
