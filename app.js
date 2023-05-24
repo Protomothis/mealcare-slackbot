@@ -3,7 +3,11 @@ const jsdom = require("jsdom");
 const fetch = require("node-fetch");
 const pkg = require('./package.json');
 const dayjs = require('dayjs');
-require('dayjs/locale/ko');
+const timezone = require('dayjs/plugin/timezone');
+const utc = require('dayjs/plugin/utc');
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault('Asia/Seoul');
 require("dotenv").config();
 
 // Initializes your app with your bot token and signing secret
@@ -31,7 +35,7 @@ const API_VERSION = pkg.version;
 
 // region services
 const getTodayString = () => {
-  const now = dayjs().utcOffset(9);
+  const now = dayjs();
   return now.format('YYYYMMDD');
 };
 
