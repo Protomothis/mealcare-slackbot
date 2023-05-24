@@ -1,4 +1,5 @@
 const { App } = require("@slack/bolt");
+const jsdom = require("jsdom");
 const fetch = require("node-fetch");
 require("dotenv").config();
 // Initializes your app with your bot token and signing secret
@@ -18,6 +19,9 @@ app.command("/menu", async ({ command, ack, say }) => {
     say(`다음과 같은 오류가 발생하였습니다. ${error}`);
   }
 });
+// region const
+let API_KEY = '244812';
+// endregion
 // region services
 const getTodayString = () => {
   const today = new Date();
@@ -26,6 +30,20 @@ const getTodayString = () => {
   const day = today.getDate().toString().padStart(2, '0');
   return `${year}${month}${day}`;
 };
+
+// 아워홈에서 발급하는 api key를 추출합니다.
+const getOurhomeCheckerKey = async () => {
+  try {
+    const ourhomeKey = await fetch('https://outerpos.ourhome.co.kr/web/put_test_mobile')
+    .then(response => response.text())
+    .then(html => {
+      const doc = new jsdom.JSDOM(html).window.document;
+      return doc.querySelector('input[name="KEY"]')?.value;
+    });
+  } catch (err) {
+    console.log('아워홈 API 키 발급 오류', error);
+  }
+}
 
 const fetchTodayMainMenu = async () => {
   try {
@@ -36,7 +54,7 @@ const fetchTodayMainMenu = async () => {
         'Content-Type': 'application/x-www-form-urlencoded'
       },
       body: new URLSearchParams({
-          'KEY': '234696',
+          'KEY': API_KEY,
           'GUBUN': 'TODAY_MENU_S5',
           'USER_ID': '',
           'BUSIPLCD': 'FA1WZ',
@@ -63,7 +81,7 @@ const fetchTodaySubMenu = async () => {
         'Content-Type': 'application/x-www-form-urlencoded'
       },
       body: new URLSearchParams({
-          'KEY': '234696',
+          'KEY': API_KEY,
           'GUBUN': 'TODAY_SUB_MENU_S2',
           'USER_ID': '',
           'BUSIPLCD': 'FA1WZ',
@@ -99,5 +117,6 @@ const getTodayMenu = async () => {
   const port = 3000
   // Start your app
   await app.start(process.env.PORT || port);
+  await getOurhomeCheckerKey();
   console.log(`⚡️ Slack Bolt app is running on port ${port}!`);
 })();

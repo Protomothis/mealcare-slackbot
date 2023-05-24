@@ -21,6 +21,7 @@
   "homepage": "https://github.com/Protomothis/mealcare-slackbot#readme",
   "dependencies": {
     "@slack/bolt": "^3.13.1",
+    "jsdom": "^22.0.0",
     "node-fetch": "2"
   },
   "devDependencies": {
