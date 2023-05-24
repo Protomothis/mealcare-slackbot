@@ -20,7 +20,7 @@ app.command("/menu", async ({ command, ack, say }) => {
   }
 });
 // region const
-let API_KEY = '244812';
+const API_KEY = '244812';
 // endregion
 // region services
 const getTodayString = () => {
@@ -40,12 +40,14 @@ const getOurhomeCheckerKey = async () => {
       const doc = new jsdom.JSDOM(html).window.document;
       return doc.querySelector('input[name="KEY"]')?.value;
     });
+    return ourhomeKey;
   } catch (err) {
-    console.log('아워홈 API 키 발급 오류', error);
+    console.error('아워홈 API 키 발급 오류', error);
+    return API_KEY;
   }
 }
 
-const fetchTodayMainMenu = async () => {
+const fetchTodayMainMenu = async (apiKey) => {
   try {
     // 대메뉴 불러오기
     const { result, value } = await fetch('https://fsmobile.ourhome.co.kr/TASystem/MealTicketSub/Mobile/InquireData/OHMI1428R_TODAY_MENU_S5', {
@@ -54,7 +56,7 @@ const fetchTodayMainMenu = async () => {
         'Content-Type': 'application/x-www-form-urlencoded'
       },
       body: new URLSearchParams({
-          'KEY': API_KEY,
+          'KEY': apiKey,
           'GUBUN': 'TODAY_MENU_S5',
           'USER_ID': '',
           'BUSIPLCD': 'FA1WZ',
@@ -72,7 +74,7 @@ const fetchTodayMainMenu = async () => {
   }
 };
 
-const fetchTodaySubMenu = async () => {
+const fetchTodaySubMenu = async (apiKey) => {
   try {
     // 대메뉴 불러오기
     const { result, value } = await fetch('https://fsmobile.ourhome.co.kr/TASystem/MealTicketSub/Mobile/InquireData/OHMI1428R_TODAY_SUB_MENU_S2', {
@@ -81,7 +83,7 @@ const fetchTodaySubMenu = async () => {
         'Content-Type': 'application/x-www-form-urlencoded'
       },
       body: new URLSearchParams({
-          'KEY': API_KEY,
+          'KEY': apiKey,
           'GUBUN': 'TODAY_SUB_MENU_S2',
           'USER_ID': '',
           'BUSIPLCD': 'FA1WZ',
@@ -101,7 +103,8 @@ const fetchTodaySubMenu = async () => {
 
 const getTodayMenu = async () => {
   try {
-    const [[main], subList] = await Promise.all([fetchTodayMainMenu(), fetchTodaySubMenu()]);
+    const apiKey = await getOurhomeCheckerKey();
+    const [[main], subList] = await Promise.all([fetchTodayMainMenu(apiKey), fetchTodaySubMenu(apiKey)]);
     const storeName = main.BUSIPLNM;
     const cornerName = main.CORNERNM;
     const mainMenu = main.MENUNM;
@@ -117,6 +120,5 @@ const getTodayMenu = async () => {
   const port = 3000
   // Start your app
   await app.start(process.env.PORT || port);
-  await getOurhomeCheckerKey();
   console.log(`⚡️ Slack Bolt app is running on port ${port}!`);
 })();
