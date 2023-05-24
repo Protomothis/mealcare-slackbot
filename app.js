@@ -35,8 +35,7 @@ const API_VERSION = pkg.version;
 
 // region services
 const getTodayString = () => {
-  const now = dayjs();
-  return now.format('YYYYMMDD');
+  return dayjs().tz().format('YYYYMMDD');
 };
 
 // 아워홈에서 발급하는 api key를 추출합니다.
