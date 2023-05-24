@@ -31,7 +31,7 @@ const API_VERSION = pkg.version;
 
 // region services
 const getTodayString = () => {
-  const now = dayjs().locale('ko');
+  const now = dayjs().utcOffset(9);
   return now.format('YYYYMMDD');
 };
 
@@ -127,5 +127,4 @@ const getTodayMenu = async () => {
   // Start your app
   await app.start(process.env.PORT || port);
   console.log(`⚡️ Mealcare-bot ${API_VERSION} is running on port ${port}!`);
-  console.log(getTodayString());
 })();
