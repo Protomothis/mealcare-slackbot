@@ -127,5 +127,4 @@ const getTodayMenu = async () => {
   // Start your app
   await app.start(process.env.PORT || port);
   console.log(`⚡️ Mealcare-bot ${API_VERSION} is running on port ${port}!`);
-  console.log(getTodayString());
 })();
