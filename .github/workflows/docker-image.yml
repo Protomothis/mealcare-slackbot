@@ -33,6 +33,10 @@ jobs:
         name: Build and push
         uses: docker/build-push-action@v2
         with:
+          build-args: |
+            SLACK_BOT_TOKEN=${{ secrets.SLACK_BOT_TOKEN }}
+            SLACK_SIGNING_SECRET=${{ secrets.SLACK_SIGNING_SECRET }}
+            APP_TOKEN=${{ secrets.APP_TOKEN }}
           context: .
           file: ./Dockerfile
           platforms: linux/amd64
