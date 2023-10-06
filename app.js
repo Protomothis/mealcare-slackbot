@@ -21,10 +21,13 @@ app.command("/menu", async ({ command, ack, say }) => {
   try {
     await ack();
     const { storeName, cornerName, mainMenu, subMenus } = await getTodayMenu();
-    say(`[${getTodayString()}] 오늘의 ${storeName}의 ${cornerName} 메뉴는 ${mainMenu}와 ${subMenus.join(', ')}!`);
+    if (!storeName || !cornerName || !mainMenu || !subMenus) {
+      throw Error('오늘은 식당 휴업일이거나 메뉴 정보가 없습니다.');
+    }
+    say(`[${getTodayString()}] 오늘의 ${storeName}의 ${cornerName} 메뉴는 ${mainMenu}와 ${subMenus?.join(', ')}`);
   } catch (error) {
     console.error(error);
-    say(`다음과 같은 오류가 발생하였습니다. ${error}`);
+    say(`${error}`);
   }
 });
 
@@ -49,7 +52,7 @@ const getOurhomeCheckerKey = async () => {
     });
     return ourhomeKey;
   } catch (err) {
-    console.error('아워홈 API 키 발급 오류', error);
+    console.error('아워홈 API 키 발급 오류', err);
     return API_KEY;
   }
 }
@@ -117,7 +120,7 @@ const getTodayMenu = async () => {
     const storeName = main.BUSIPLNM;
     const cornerName = main.CORNERNM;
     const mainMenu = main.MENUNM;
-    const subMenus = subList.map((list) => list.MENUNM);
+    const subMenus = subList.map((list) => list.MENUNM).filter((menu) => menu);
     return { storeName, cornerName, mainMenu, subMenus };
   } catch (err) {
     return err;
