@@ -1,6 +1,6 @@
 {
   "name": "mealcare-slackbot",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "mealcare today menu request bot",
   "main": "index.js",
   "scripts": {

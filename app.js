@@ -18,6 +18,19 @@ const app = new App({
   socketMode: Boolean(process.env.SOCKET_MODE),
   appToken: process.env.APP_TOKEN,
 });
+app.command("/menu", async ({ command, ack, say }) => {
+  try {
+    await ack();
+    const { storeName, cornerName, mainMenu, subMenus } = await getTodayMenu();
+    if (!storeName || !cornerName || !mainMenu || !subMenus) {
+      throw Error('오늘은 식당 휴업일이거나 메뉴 정보가 없습니다.');
+    }
+    say(`[${getTodayString()}] 오늘의 ${storeName}의 ${cornerName} 메뉴는 ${mainMenu}와 ${subMenus?.join(', ')}`);
+  } catch (error) {
+    console.error(error);
+    say(`${error}`);
+  }
+});
 
 // region initialize
 commandServices(app);
