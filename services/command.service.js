@@ -16,20 +16,17 @@ const commandServices = (app) => {
     }
   }
   
-  const getTodayMenuString = async () => {
-    const { storeName, cornerName, mainMenu, subMenus } = await getTodayMenu();
-    return `[${getTodayString()}] 오늘의 ${storeName}의 ${cornerName} 메뉴는 ${mainMenu}와 ${subMenus.join(', ')} 입니다.`;
-  };
-  
   app.command("/menu", async ({ command, ack, say }) => {
     try {
       await ack();
-      const menuDescription = await getTodayMenuString();
-      await say(menuDescription);
-      await say('오늘 식사가 마음에 드실까요?');
+      const { storeName, cornerName, mainMenu, subMenus } = await getTodayMenu();
+      if (!storeName || !cornerName || !mainMenu || !subMenus) {
+        throw Error('오늘은 식당 휴업일이거나 메뉴 정보가 없습니다.');
+      }
+      say(`[${getTodayString()}] 오늘의 ${storeName}의 ${cornerName} 메뉴는 ${mainMenu}와 ${subMenus?.join(', ')}`);
     } catch (error) {
       console.error(error);
-      await say(`다음과 같은 오류가 발생하였습니다. ${error}`);
+      say(`${error}`);
     }
   });
 };
