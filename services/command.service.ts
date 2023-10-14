@@ -1,7 +1,9 @@
-const { getTodayString } = require("../utils");
-const { fetchOurhomeApiKey, fetchTodayMainMenu, fetchTodaySubMenu } = require("../api");
+import { getTodayString } from '../utils';
+import { fetchOurhomeApiKey, fetchTodayMainMenu, fetchTodaySubMenu } from '../api';
+import { App } from '@slack/bolt';
+import { StringIndexed } from '@slack/bolt/dist/types/helpers';
 
-const commandServices = (app) => {
+const commandServices = (app: App<StringIndexed>) => {
   const getTodayMenu = async () => {
     try {
       const apiKey = await fetchOurhomeApiKey();
@@ -15,7 +17,7 @@ const commandServices = (app) => {
       return err;
     }
   }
-  
+
   app.command("/menu", async ({ command, ack, say }) => {
     try {
       await ack();
@@ -31,4 +33,4 @@ const commandServices = (app) => {
   });
 };
 
-module.exports = commandServices;
+export default commandServices;

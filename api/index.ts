@@ -1,18 +1,18 @@
-const fetch = require("node-fetch");
-const { OURHOME_DEFAULT_API_KEY } = require('../utils/const');
-const { getTodayString } = require('../utils');
-const jsdom = require("jsdom");
+import fetch from 'node-fetch';
+import { OURHOME_DEFAULT_API_KEY } from '../utils/const';
+import { getTodayString } from '../utils';
+import jsdom from 'jsdom';
+import Ourhome from '../models';
 
 // 아워홈에서 발급하는 api key를 추출합니다.
-const fetchOurhomeApiKey = async () => {
+export const fetchOurhomeApiKey = async () => {
   try {
-    const ourhomeKey = await fetch('https://outerpos.ourhome.co.kr/web/put_test_mobile')
+    return await fetch('https://outerpos.ourhome.co.kr/web/put_test_mobile')
       .then(response => response.text())
       .then(html => {
         const doc = new jsdom.JSDOM(html).window.document;
-        return doc.querySelector('input[name="KEY"]')?.value;
+        return (doc.querySelector('input[name="KEY"]') as HTMLInputElement)?.value;
       });
-    return ourhomeKey;
   } catch (err) {
     console.error('아워홈 API 키 발급 오류', err);
     return OURHOME_DEFAULT_API_KEY;
@@ -20,7 +20,7 @@ const fetchOurhomeApiKey = async () => {
 }
 
 // 오늘의 메인 메뉴를 호출합니다.
-const fetchTodayMainMenu = async (apiKey) => {
+export const fetchTodayMainMenu = async (apiKey: string) => {
   try {
     // 대메뉴 불러오기
     const requestBody = new URLSearchParams({
@@ -30,7 +30,7 @@ const fetchTodayMainMenu = async (apiKey) => {
       'BUSIPLCD': 'FA1WZ',
       'DATE': getTodayString(),
       'LANG': 'KOR',
-    });
+    } as Record<keyof Ourhome.CommonRequestBody, string>);
     const { result, value } = await fetch('https://fsmobile.ourhome.co.kr/TASystem/MealTicketSub/Mobile/InquireData/OHMI1428R_TODAY_MENU_S5', {
       method: 'POST',
       headers:{
@@ -49,7 +49,7 @@ const fetchTodayMainMenu = async (apiKey) => {
 };
 
 // 오늘의 서브 메뉴를 호출합니다.
-const fetchTodaySubMenu = async (apiKey) => {
+export const fetchTodaySubMenu = async (apiKey: string) => {
   try {
     // 소메뉴 불러오기
     const requestBody = new URLSearchParams({
@@ -59,7 +59,7 @@ const fetchTodaySubMenu = async (apiKey) => {
       'BUSIPLCD': 'FA1WZ',
       'DATE': getTodayString(),
       'LANG': 'KOR',
-    });
+    } as Record<keyof Ourhome.CommonRequestBody, string>);
     const { result, value } = await fetch('https://fsmobile.ourhome.co.kr/TASystem/MealTicketSub/Mobile/InquireData/OHMI1428R_TODAY_SUB_MENU_S2', {
       method: 'POST',
       headers:{
@@ -76,9 +76,3 @@ const fetchTodaySubMenu = async (apiKey) => {
     return err;
   }
 };
-
-module.exports = {
-  fetchOurhomeApiKey,
-  fetchTodayMainMenu,
-  fetchTodaySubMenu,
-}

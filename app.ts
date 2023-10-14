@@ -1,18 +1,20 @@
-const { App } = require("@slack/bolt");
-const dayjs = require('dayjs');
-const timezone = require('dayjs/plugin/timezone');
-const utc = require('dayjs/plugin/utc');
+import { App } from '@slack/bolt';
+import dayjs from 'dayjs';
+import timezone from 'dayjs/plugin/timezone';
+import utc from 'dayjs/plugin/utc';
+
 dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.tz.setDefault('Asia/Seoul');
 
-const commandServices = require('./services/command.service');
-const { API_VERSION } = require('./utils/const');
+import commandServices from './services/command.service';
+import { API_VERSION } from './utils/const';
+import { StringIndexed } from '@slack/bolt/dist/types/helpers';
 
 require("dotenv").config();
 
 // Initializes your app with your bot token and signing secret
-const app = new App({
+const app: App<StringIndexed> = new App({
   token: process.env.SLACK_BOT_TOKEN,
   signingSecret: process.env.SLACK_SIGNING_SECRET,
   socketMode: Boolean(process.env.SOCKET_MODE),
