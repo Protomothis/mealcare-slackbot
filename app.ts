@@ -23,7 +23,7 @@ require("dotenv").config();
 const app: App<StringIndexed> = new App({
   token: process.env.SLACK_BOT_TOKEN,
   signingSecret: process.env.SLACK_SIGNING_SECRET,
-  socketMode: Boolean(process.env.SOCKET_MODE),
+  socketMode: true,
   appToken: process.env.APP_TOKEN,
 });
 
