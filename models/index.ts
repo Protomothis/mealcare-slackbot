@@ -1,5 +1,5 @@
-namespace Ourhome {
-  export interface CommonMenu {
+export namespace Ourhome {
+  export interface CommonSupply {
     BUSIPLNM: string; // 제공업체명
     CORNERNM: string; // 코너명
     MENUNM: string; // 메뉴명
@@ -15,4 +15,11 @@ namespace Ourhome {
   }
 }
 
-export default Ourhome;
+export namespace Mealcare {
+  export interface ServiceMenu {
+    storeName: string;
+    cornerName: string;
+    mainMenu: string;
+    subMenus: string[];
+  }
+}
